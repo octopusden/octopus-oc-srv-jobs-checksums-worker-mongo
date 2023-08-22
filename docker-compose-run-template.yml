@@ -1,0 +1,19 @@
+version: "3.7"
+services:
+  checksums-worker-mongo:
+    logging:
+      driver: "syslog"
+      options:
+        tag: "container_checksums-worker-mongo_{{.ID}}"
+    restart: always
+    image: ${DOCKER_REGISTRY_HOST}/octopusden/oc-srv-jobs-checksums-worker-mongo:${TAG:-latest}
+    environment:
+      - DISTRIBUTIVES_API_URL=${DISTRIBUTIVES_API_URL}
+      - MVN_URL=${MVN_URL}
+      - MVN_USER=${MVN_USER}
+      - MVN_PASSWORD=${MVN_PASSWORD}
+      - AMQP_URL=${AMQP_URL}
+      - AMQP_USER=${AMQP_USER}
+      - AMQP_PASSWORD=${AMQP_PASSWORD}
+    command: "--reconnect --declare no -vv --queue=${WORKER_QUEUE} --remove always"
+
